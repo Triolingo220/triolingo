@@ -1,41 +1,49 @@
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
-  color: white;
+  background: #eef2f7;
   margin: 0;
   padding: 0;
+  text-align: center;
 }
 
 header {
-  padding: 15px 20px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(12px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  padding: 10px;
+  z-index: 100;
 }
 
-header h1 { margin: 0; font-size: 24px; }
-nav button { margin-left: 10px; }
+#navbar {
+  margin-top: 10px;
+}
+
+#navbar button {
+  padding: 8px 15px;
+  margin: 3px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255,255,255,0.25);
+  transition: 0.2s;
+}
+
+#navbar button:hover {
+  background: rgba(255,255,255,0.4);
+}
 
 button {
-  padding: 8px 16px;
+  padding: 10px 20px;
   margin: 5px;
   font-size: 16px;
-  border: none;
-  border-radius: 12px;
   cursor: pointer;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-  color: white;
-  transition: 0.3s;
+  border: none;
+  border-radius: 5px;
+  transition: 0.2s;
 }
 
-button:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
-
-input { padding: 8px; border-radius: 8px; border: none; margin: 5px; }
+button:hover { opacity: 0.8; }
 
 #gameBoard {
   display: grid;
@@ -48,33 +56,31 @@ input { padding: 8px; border-radius: 8px; border: none; margin: 5px; }
 .card, .flashcard {
   width: 100px;
   height: 100px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
+  background: rgba(255,255,255,0.2);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 8px;
   user-select: none;
-  transition: 0.3s;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  backdrop-filter: blur(10px);
+  transition: 0.2s;
 }
 
-.card.flipped { background: rgba(255,255,255,0.3); color: #fff; box-shadow: 0 8px 25px rgba(255,255,255,0.25); }
+.card.flipped { background: rgba(52,152,219,0.7); }
 
-.screen { display: none; text-align:center; margin-top:30px; }
-#pointsRank { margin: 5px; font-weight: bold; }
-
-.correct { background: rgba(46,204,113,0.8) !important; box-shadow: 0 0 15px rgba(46,204,113,0.8) !important;}
-.wrong { background: rgba(231,76,60,0.8) !important; box-shadow: 0 0 15px rgba(231,76,60,0.8) !important; }
-
-.pass-container { position: relative; display:inline-block; }
-.pass-container input { padding-right:30px; }
-.pass-container .toggle-pass {
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
+#usernameScreen, #languageScreen, #methodScreen, #gameScreen, #leaderboardScreen, #profileScreen {
+  display: none;
+  margin-top: 30px;
 }
+
+#pointsDisplay, #rankDisplay {
+  margin: 5px;
+  font-weight: bold;
+}
+
+#leaderboardList li:nth-child(1) { color: gold; font-weight: bold; }
+#leaderboardList li:nth-child(2) { color: silver; font-weight: bold; }
+#leaderboardList li:nth-child(3) { color: #cd7f32; font-weight: bold; } /* Bronze */
