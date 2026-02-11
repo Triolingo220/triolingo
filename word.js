@@ -27,11 +27,8 @@ const words = {
     ["mountain","Berg"],["river","Fluss"],["sea","Meer"],["tree","Baum"],["flower","Blume"],
     ["animal","Tier"],["bird","Vogel"],["fish","Fisch"],["cold","Kalt"],["hot","Heiß"],
     ["happy","Glücklich"],["sad","Traurig"],["big","Groß"],["small","Klein"],["fast","Schnell"],
-    ["slow","Langsam"],["light","Licht"],["dark","Dunkel"],["day","Tag"],["night","Nacht"],
-    ["breakfast","Frühstück"],["lunch","Mittagessen"],["dinner","Abendessen"],["apple","Apfel"],["bread","Brot"],
-    ["milk","Milch"],["cheese","Käse"],["egg","Ei"],["fish","Fisch"],["meat","Fleisch"],
-    ["school","Schule"],["book","Buch"],["pen","Stift"],["paper","Papier"],["chair","Stuhl"],
-    ["table","Tisch"],["window","Fenster"],["door","Tür"],["phone","Telefon"],["computer","Computer"]
+    ["slow","Langsam"],["light","Licht"],["dark","Dunkel"],["breakfast","Frühstück"],["lunch","Mittagessen"],
+    ["dinner","Abendessen"],["apple","Apfel"],["bread","Brot"],["milk","Milch"],["cheese","Käse"]
   ],
 
   russisch: [
@@ -39,30 +36,28 @@ const words = {
     ["вы","ihr/Sie"],["они","sie"],["это","das ist"],["что","was"],["не","nicht"],
     ["да","ja"],["нет","nein"],["и","und"],["в","in"],["на","auf"],
     ["с","mit"],["по","nach"],["как","wie"],["к","zu"],["у","bei"],
-    ["за","für"],["от","von"],["из","aus"],["о","über"],["же","aber"],
-    ["так","so"],["его","sein(e)"],["ее","ihr(e)"],["их","ihr"],["для","für"],
-    ["быть","sein"],["есть","sein/essen"],["иметь","haben"],["делать","machen"],["говорить","sprechen"],
+    ["за","für"],["от","von"],["из","aus"],["о","über"],["так","so"],
+    ["его","sein(e)"],["ее","ihr(e)"],["их","ihr"],["для","für"],["быть","sein"],
+    ["есть","sein/essen"],["иметь","haben"],["делать","machen"],["говорить","sprechen"],
     ["идти","gehen"],["видеть","sehen"],["думать","denken"],["жить","leben"],["работать","arbeiten"],
     ["учить","lernen"],["слово","Wort"],["дом","Haus"],["город","Stadt"],["машина","Auto"],
     ["улица","Straße"],["вода","Wasser"],["еда","Essen"],["день","Tag"],["ночь","Nacht"],
     ["рука","Hand"],["кот","Katze"],["собака","Hund"],["друг","Freund"],["семья","Familie"],
-    ["любовь","Liebe"],["время","Zeit"],["дело","Sache"],["место","Ort"],["жена","Ehefrau"],
-    ["муж","Ehemann"],["ребенок","Kind"],["мать","Mutter"],["отец","Vater"],["школа","Schule"],
+    ["любовь","Liebe"],["время","Zeit"],["дело","Sache"],["место","Ort"],["школа","Schule"],
     ["книга","Buch"],["ручка","Stift"],["бумага","Papier"],["стул","Stuhl"],["стол","Tisch"],
     ["окно","Fenster"],["дверь","Tür"],["телефон","Telefon"],["компьютер","Computer"]
   ],
 
   kurdisch: [
     ["ez","ich"],["tu","du"],["ew","er/sie/es"],["em","wir"],["hûn","ihr"],
-    ["ew","sie (Pl)"],["ev","dies"],["ji","von"],["li","in/an"],["bi","mit"],
-    ["ji","aus"],["û","und"],["ne","nicht"],["belê","ja"],["na","nein"],
-    ["min","mein"],["te","dein"],["wî","sein(e)"],["ê","sein(e) fem"],["me","unser"],
-    ["hun","euer"],["xerîb","Fremd"],["xwende","lernen"],["bext","Glück"],["dil","Herz"],
-    ["mal","Haus"],["nav","Name"],["roj","Tag"],["şev","Nacht"],["av","Wasser"],
-    ["nan","Brot"],["goşt","Fleisch"],["êvar","Abend"],["sibeh","Morgen"],["rê","Weg"],
-    ["zarok","Kind"],["bav","Vater"],["dayik","Mutter"],["birayê","Bruder"],["xwişk","Schwester"],
-    ["dost","Freund"],["ewîn","Liebe"],["xwarin","essen"],["vexwarin","trinken"],["çûn","gehen"],
-    ["hatin","kommen"],["xwestin","wollen"],["fêmkirin","verstehen"],["çawa","wie"],["ku","wo"],
-    ["kîjan","welcher"],["ziman","Sprache"],["derbas","vorbei"],["çend","wie viel"]
+    ["ev","dies"],["ji","von"],["li","in/an"],["bi","mit"],["û","und"],
+    ["ne","nicht"],["belê","ja"],["na","nein"],["min","mein"],["te","dein"],
+    ["wî","sein(e)"],["ê","sein(e) fem"],["me","unser"],["hun","euer"],["xerîb","Fremd"],
+    ["xwende","lernen"],["bext","Glück"],["dil","Herz"],["mal","Haus"],["nav","Name"],
+    ["roj","Tag"],["şev","Nacht"],["av","Wasser"],["nan","Brot"],["goşt","Fleisch"],
+    ["êvar","Abend"],["sibeh","Morgen"],["rê","Weg"],["zarok","Kind"],["bav","Vater"],
+    ["dayik","Mutter"],["birayê","Bruder"],["xwişk","Schwester"],["dost","Freund"],["ewîn","Liebe"],
+    ["xwarin","essen"],["vexwarin","trinken"],["çûn","gehen"],["hatin","kommen"],["xwestin","wollen"],
+    ["fêmkirin","verstehen"],["çawa","wie"],["ku","wo"],["kîjan","welcher"],["ziman","Sprache"]
   ]
 };
