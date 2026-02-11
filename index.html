@@ -3,342 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <title>Triolingo 2.0</title>
-<style>
-/* Body */
-body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
-  color: white;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-}
-
-/* Header */
-header {
-  padding: 20px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255,255,255,0.3);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-  border-radius: 0 0 15px 15px;
-  color: white;
-}
-
-/* Buttons */
-button {
-  padding: 10px 20px;
-  margin: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  border-radius: 12px;
-  transition: 0.3s;
-  
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-  color: white;
-}
-
-button:hover {
-  background: rgba(255,255,255,0.25);
-  transform: translateY(-2px);
-}
-
-/* Game Board */
-#gameBoard {
-  display: grid;
-  grid-template-columns: repeat(4, 120px);
-  gap: 10px;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-/* Cards / Flashcards */
-.card, .flashcard {
-  width: 100px;
-  height: 100px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  cursor: pointer;
-  user-select: none;
-  transition: 0.3s;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-.card.flipped {
-  background: rgba(255,255,255,0.3);
-  color: #fff;
-  box-shadow: 0 8px 25px rgba(255,255,255,0.25);
-}
-
-/* Screens */
-#usernameScreen, #languageScreen, #methodScreen, #gameScreen, #leaderboardScreen {
-  display: none;
-  margin-top: 30px;
-}
-
-/* Points / Rank */
-#pointsDisplay, #rankDisplay {
-  margin: 5px;
-  font-weight: bold;
-}
-
-/* Correct / Wrong Feedback */
-.correct {
-  background: rgba(46,204,113,0.8) !important;
-  box-shadow: 0 0 15px rgba(46,204,113,0.8) !important;
-}
-
-.wrong {
-  background: rgba(231,76,60,0.8) !important;
-  box-shadow: 0 0 15px rgba(231,76,60,0.8) !important;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <header>
-<h1>🌍 Triolingo 2.0</h1>
-<div id="pointsDisplay"></div>
-<div id="rankDisplay"></div>
+  <h1>🌍 Triolingo 2.0</h1>
+  <nav id="navBar" style="display:none;">
+    <button onclick="showLanguageScreen()">Sprache</button>
+    <button onclick="showLeaderboard()">Rangliste</button>
+    <button onclick="showProfile()">Profil</button>
+    <button onclick="logoutUser()">Abmelden</button>
+  </nav>
 </header>
 
-<!-- Benutzername -->
-<div id="usernameScreen">
-<h2>Gib deinen Benutzernamen ein</h2>
-<input type="text" id="usernameInput" placeholder="Benutzername">
-<br>
-<button onclick="setUsername()">Starten</button>
+<div id="pointsRank" style="display:none;">Punkte: 0 | Rang: Anfänger</div>
+
+<!-- Login / Registrierung -->
+<div id="loginScreen" class="screen">
+  <h2>Anmelden oder Registrieren</h2>
+  <input type="text" id="loginUsername" placeholder="Benutzername"><br>
+  <div class="pass-container">
+    <input type="password" id="loginPassword" placeholder="Passwort">
+    <span class="toggle-pass" onclick="togglePassword('loginPassword')">👁️</span>
+  </div><br>
+  <button onclick="loginUser()">Anmelden</button>
+  <button onclick="registerUser()">Registrieren</button>
 </div>
 
 <!-- Sprache wählen -->
-<div id="languageScreen">
-<h2>Wähle eine Sprache</h2>
-<button onclick="selectLanguage('englisch')">Englisch</button>
-<button onclick="selectLanguage('russisch')">Russisch</button>
-<button onclick="selectLanguage('kurdisch')">Kurdisch</button>
+<div id="languageScreen" class="screen">
+  <h2>Wähle eine Sprache</h2>
+  <button onclick="selectLanguage('englisch')">Englisch</button>
+  <button onclick="selectLanguage('russisch')">Russisch</button>
+  <button onclick="selectLanguage('kurdisch')">Kurdisch</button>
 </div>
 
 <!-- Lernmethode -->
-<div id="methodScreen">
-<h2>Wähle Lernmethode</h2>
-<button onclick="startGame('memory')">Memory</button>
-<button onclick="startGame('flashcards')">Karteikarten</button>
-<button onclick="startGame('normal')">Wörter lernen</button>
+<div id="methodScreen" class="screen">
+  <h2>Wähle Lernmethode</h2>
+  <button onclick="startGame('memory')">Memory</button>
+  <button onclick="startGame('flashcards')">Karteikarten</button>
+  <button onclick="startGame('normal')">Wörter lernen</button>
 </div>
 
 <!-- Spielbereich -->
-<div id="gameScreen">
-<h2 id="methodTitle"></h2>
-<div id="gameBoard"></div>
-<button onclick="goToMethods()">Zurück zu Methoden</button>
-<button onclick="showLeaderboard()">Rangliste</button>
+<div id="gameScreen" class="screen">
+  <h2 id="methodTitle"></h2>
+  <div id="gameBoard"></div>
 </div>
 
 <!-- Rangliste -->
-<div id="leaderboardScreen">
-<h2>Top 10 Spieler</h2>
-<ol id="leaderboardList"></ol>
-<button onclick="goToLanguage()">Zurück zur Sprache</button>
+<div id="leaderboardScreen" class="screen">
+  <h2>Top 10 Spieler</h2>
+  <ol id="leaderboardList"></ol>
 </div>
 
-<script>
-// --- Variablen ---
-let username = '', language = '', method = '', points = 0;
-const rankThresholds = [
-{name:'Anfänger', points:0},
-{name:'Fortgeschritten', points:100},
-{name:'Experte', points:250},
-{name:'Meister', points:500}
-];
+<!-- Profil -->
+<div id="profileScreen" class="screen">
+  <h2>Profil</h2>
+  <p>Benutzername: <span id="profileUsername"></span></p>
+  <div class="pass-container">
+    Passwort: <input type="password" id="profilePassword" disabled>
+    <span class="toggle-pass" onclick="togglePassword('profilePassword')">👁️</span>
+  </div>
+  <p id="profilePointsRank"></p>
+</div>
 
-// --- Beispielhafte Wörter ---
-const words = {
-englisch:[["apple","Apfel"],["house","Haus"],["dog","Hund"],["cat","Katze"],["water","Wasser"]],
-russisch:[["яблоко","Apfel"],["дом","Haus"],["собака","Hund"],["кот","Katze"],["вода","Wasser"]],
-kurdisch:[["sêv","Apfel"],["mal","Haus"],["kûçik","Hund"],["pisîk","Katze"],["av","Wasser"]]
-};
-
-// --- Screens ---
-function hideAllScreens(){['usernameScreen','languageScreen','methodScreen','gameScreen','leaderboardScreen'].forEach(id=>document.getElementById(id).style.display='none');}
-function showUsernameScreen(){hideAllScreens(); document.getElementById('usernameScreen').style.display='block';}
-function showLanguageScreen(){hideAllScreens(); document.getElementById('languageScreen').style.display='block';}
-function showMethodScreen(){hideAllScreens(); document.getElementById('methodScreen').style.display='block';}
-function goToMethods(){showMethodScreen();}
-function goToLanguage(){showLanguageScreen();}
-
-// --- Punkte & Ränge ---
-function updatePointsAndRank(){
-  document.getElementById('pointsDisplay').innerText=`Punkte: ${points}`;
-  let currentRank=rankThresholds[0].name; let nextRankPoints=rankThresholds[1].points;
-  for(let i=0;i<rankThresholds.length;i++){
-    if(points>=rankThresholds[i].points) currentRank=rankThresholds[i].name;
-    if(i<rankThresholds.length-1) nextRankPoints=rankThresholds[i+1].points;
-  }
-  document.getElementById('rankDisplay').innerText=`Rang: ${currentRank} (nächster Rang: ${nextRankPoints} Punkte)`;
-}
-
-// --- Leaderboard ---
-function showLeaderboard(){
-  hideAllScreens(); document.getElementById('leaderboardScreen').style.display='block';
-  let leaderboard=JSON.parse(localStorage.getItem('triolingoLeaderboard')||'[]');
-  leaderboard.push({username,points});
-  leaderboard.sort((a,b)=>b.points-a.points);
-  if(leaderboard.length>10) leaderboard=leaderboard.slice(0,10);
-  localStorage.setItem('triolingoLeaderboard',JSON.stringify(leaderboard));
-  const list=document.getElementById('leaderboardList'); list.innerHTML='';
-  leaderboard.forEach(player=>{const li=document.createElement('li'); li.innerText=`${player.username}: ${player.points} Punkte`; list.appendChild(li);});
-}
-
-// --- Username & Language ---
-function setUsername(){
-  const input=document.getElementById('usernameInput').value.trim();
-  if(input){username=input; points=0; showLanguageScreen(); updatePointsAndRank();}
-  else alert('Bitte Benutzernamen eingeben');
-}
-function selectLanguage(lang){language=lang; showMethodScreen();}
-
-// --- Lernmethoden ---
-function startGame(selectedMethod){
-  method=selectedMethod; hideAllScreens(); document.getElementById('gameScreen').style.display='block';
-  document.getElementById('methodTitle').innerText=method==='memory'?'Memory-Spiel':method==='flashcards'?'Karteikarten':'Wörter lernen';
-  if(method==='memory') setupMemory();
-  else if(method==='flashcards') setupFlashcards();
-  else setupNormalLearning();
-}
-
-// --- Memory ---
-let firstCard=null, secondCard=null, lockBoard=false;
-let matchedPairs=0, totalPairs=0;
-function setupMemory(){
-  const board=document.getElementById('gameBoard'); 
-  board.innerHTML='';
-  matchedPairs = 0;
-
-  let selectedWords=[...words[language]].sort(()=>0.5-Math.random()).slice(0,5); // kürzer für Test
-  totalPairs = selectedWords.length;
-
-  let cards=[]; 
-  selectedWords.forEach(pair=>{cards.push(pair[0]); cards.push(pair[1]);});
-  cards.sort(()=>0.5-Math.random());
-
-  cards.forEach(word=>{
-    const card=document.createElement('div'); 
-    card.classList.add('card'); 
-    card.dataset.word=word; 
-    card.innerText='?'; 
-    card.onclick=flipCard; 
-    board.appendChild(card);
-  });
-}
-
-function flipCard(){
-  if(lockBoard||this===firstCard) return; 
-  this.classList.add('flipped'); 
-  this.innerText=this.dataset.word;
-
-  if(!firstCard){firstCard=this; return;} 
-  secondCard=this; 
-  checkMatch();
-}
-
-function checkMatch(){
-  let isMatch=false; 
-  words[language].forEach(pair=>{
-    if((pair[0]===firstCard.dataset.word && pair[1]===secondCard.dataset.word) ||
-       (pair[1]===firstCard.dataset.word && pair[0]===secondCard.dataset.word)) isMatch=true;
-  });
-
-  if(isMatch){
-    matchedPairs++;
-    firstCard.removeEventListener('click',flipCard);
-    secondCard.removeEventListener('click',flipCard);
-    resetMemory();
-
-    if(matchedPairs === totalPairs){
-      points += 100;
-      alert(`Memory abgeschlossen! +100 Punkte`);
-      updatePointsAndRank();
-      setupMemory();
-    }
-
-  } else{
-    lockBoard=true; 
-    firstCard.classList.add('wrong');
-    secondCard.classList.add('wrong');
-    setTimeout(()=>{
-      firstCard.classList.remove('flipped','wrong'); 
-      secondCard.classList.remove('flipped','wrong'); 
-      firstCard.innerText='?'; 
-      secondCard.innerText='?'; 
-      resetMemory();
-    },800);
-  }
-}
-
-function resetMemory(){[firstCard,secondCard]=[null,null]; lockBoard=false;}
-
-// --- Flashcards ---
-function setupFlashcards(){
-  const board=document.getElementById('gameBoard'); board.innerHTML='';
-  const pair=words[language][Math.floor(Math.random()*words[language].length)];
-  const card=document.createElement('div'); card.classList.add('flashcard'); card.innerText=pair[0]; 
-  card.onclick=()=>{card.innerText=pair[1];}; board.appendChild(card);
-  
-  const nextBtn=document.createElement('button'); nextBtn.innerText='Richtig';
-  nextBtn.onclick=()=>{
-    nextBtn.classList.add('correct');
-    points+=10; 
-    updatePointsAndRank(); 
-    setTimeout(setupFlashcards, 800);
-  };
-  board.appendChild(nextBtn);
-}
-
-// --- Normal Learning ---
-function setupNormalLearning(){
-  const pair = words[language][Math.floor(Math.random()*words[language].length)]; 
-  const board = document.getElementById('gameBoard'); 
-  board.innerHTML = '';
-  
-  const wordDiv = document.createElement('div'); 
-  wordDiv.innerText = pair[0]; 
-  wordDiv.style.fontSize = '24px'; 
-  board.appendChild(wordDiv);
-
-  let options = [pair[1]]; 
-  while(options.length < 4){
-    let randPair = words[language][Math.floor(Math.random()*words[language].length)];
-    if(!options.includes(randPair[1])) options.push(randPair[1]);
-  }
-  options.sort(()=>0.5 - Math.random());
-
-  options.forEach(opt=>{
-    const btn = document.createElement('button'); 
-    btn.innerText = opt;
-    btn.onclick = ()=>{
-      if(opt === pair[1]){
-        btn.classList.add("correct");
-        points += 15;
-      } else {
-        btn.classList.add("wrong");
-      }
-      updatePointsAndRank();
-      setTimeout(setupNormalLearning, 800);
-    };
-    board.appendChild(btn);
-  });
-}
-
-// --- Start ---
-showUsernameScreen();
-</script>
-
+<script src="words.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
