@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <title>Triolingo 2.0</title>
@@ -23,12 +23,15 @@ button:hover{opacity:0.8;}
 <div id="rankDisplay"></div>
 </header>
 
+<!-- Benutzername -->
 <div id="usernameScreen">
 <h2>Gib deinen Benutzernamen ein</h2>
 <input type="text" id="usernameInput" placeholder="Benutzername">
+<br>
 <button onclick="setUsername()">Starten</button>
 </div>
 
+<!-- Sprache wählen -->
 <div id="languageScreen">
 <h2>Wähle eine Sprache</h2>
 <button onclick="selectLanguage('englisch')">Englisch</button>
@@ -36,6 +39,7 @@ button:hover{opacity:0.8;}
 <button onclick="selectLanguage('kurdisch')">Kurdisch</button>
 </div>
 
+<!-- Lernmethode -->
 <div id="methodScreen">
 <h2>Wähle Lernmethode</h2>
 <button onclick="startGame('memory')">Memory</button>
@@ -43,6 +47,7 @@ button:hover{opacity:0.8;}
 <button onclick="startGame('normal')">Wörter lernen</button>
 </div>
 
+<!-- Spielbereich -->
 <div id="gameScreen">
 <h2 id="methodTitle"></h2>
 <div id="gameBoard"></div>
@@ -50,6 +55,7 @@ button:hover{opacity:0.8;}
 <button onclick="showLeaderboard()">Rangliste</button>
 </div>
 
+<!-- Rangliste -->
 <div id="leaderboardScreen">
 <h2>Top 10 Spieler</h2>
 <ol id="leaderboardList"></ol>
@@ -57,8 +63,8 @@ button:hover{opacity:0.8;}
 </div>
 
 <script>
+// --- Variablen ---
 let username = '', language = '', method = '', points = 0;
-
 const rankThresholds = [
 {name:'Anfänger', points:0},
 {name:'Fortgeschritten', points:100},
@@ -66,10 +72,9 @@ const rankThresholds = [
 {name:'Meister', points:500}
 ];
 
-// --- Beispielhafte Alltagswörter (Demo: 50 Wörter pro Sprache) ---
+// --- Beispielhafte Alltagswörter (50 Wörter pro Sprache) ---
 const words = {
-englisch:[
-["apple","Apfel"],["house","Haus"],["dog","Hund"],["cat","Katze"],["water","Wasser"],
+englisch:[["apple","Apfel"],["house","Haus"],["dog","Hund"],["cat","Katze"],["water","Wasser"],
 ["book","Buch"],["school","Schule"],["car","Auto"],["tree","Baum"],["bread","Brot"],
 ["milk","Milch"],["sun","Sonne"],["moon","Mond"],["star","Stern"],["city","Stadt"],
 ["road","Straße"],["street","Straße"],["phone","Telefon"],["computer","Computer"],["chair","Stuhl"],
@@ -78,10 +83,8 @@ englisch:[
 ["time","Zeit"],["day","Tag"],["night","Nacht"],["food","Essen"],["drink","Getränk"],
 ["animal","Tier"],["bird","Vogel"],["fish","Fisch"],["mountain","Berg"],["river","Fluss"],
 ["sea","Meer"],["rain","Regen"],["snow","Schnee"],["cold","Kalt"],["hot","Heiß"],
-["happy","Glücklich"],["sad","Traurig"],["big","Groß"],["small","Klein"],["fast","Schnell"]
-],
-russisch:[
-["яблоко","Apfel"],["дом","Haus"],["собака","Hund"],["кот","Katze"],["вода","Wasser"],
+["happy","Glücklich"],["sad","Traurig"],["big","Groß"],["small","Klein"],["fast","Schnell"]],
+russisch:[["яблоко","Apfel"],["дом","Haus"],["собака","Hund"],["кот","Katze"],["вода","Wasser"],
 ["книга","Buch"],["школа","Schule"],["машина","Auto"],["дерево","Baum"],["хлеб","Brot"],
 ["молоко","Milch"],["солнце","Sonne"],["луна","Mond"],["звезда","Stern"],["город","Stadt"],
 ["дорога","Straße"],["улица","Straße"],["телефон","Telefon"],["компьютер","Computer"],["стул","Stuhl"],
@@ -90,10 +93,8 @@ russisch:[
 ["время","Zeit"],["день","Tag"],["ночь","Nacht"],["еда","Essen"],["напиток","Getränk"],
 ["животное","Tier"],["птица","Vogel"],["рыба","Fisch"],["гора","Berg"],["река","Fluss"],
 ["море","Meer"],["дождь","Regen"],["снег","Schnee"],["холодно","Kalt"],["жарко","Heiß"],
-["счастливый","Glücklich"],["грустный","Traurig"],["большой","Groß"],["маленький","Klein"],["быстрый","Schnell"]
-],
-kurdisch:[
-["sêv","Apfel"],["mal","Haus"],["kûçik","Hund"],["pisîk","Katze"],["av","Wasser"],
+["счастливый","Glücklich"],["грустный","Traurig"],["большой","Groß"],["маленький","Klein"],["быстрый","Schnell"]],
+kurdisch:[["sêv","Apfel"],["mal","Haus"],["kûçik","Hund"],["pisîk","Katze"],["av","Wasser"],
 ["pirtûk","Buch"],["dibistan","Schule"],["erebê","Auto"],["dar","Baum"],["nan","Brot"],
 ["şîr","Milch"],["roj","Sonne"],["heyv","Mond"],["stêr","Stern"],["bajar","Stadt"],
 ["rê","Straße"],["kolan","Straße"],["telefon","Telefon"],["kompîter","Computer"],["kursî","Stuhl"],
@@ -102,48 +103,103 @@ kurdisch:[
 ["dem","Zeit"],["rojek","Tag"],["şev","Nacht"],["xwarin","Essen"],["vexwarin","Getränk"],
 ["ajî","Tier"],["bavik","Vogel"],["masî","Fisch"],["çiyayê","Berg"],["çem","Fluss"],
 ["daryayê","Meer"],["baran","Regen"],["berf","Schnee"],["sar","Kalt"],["germ","Heiß"],
-["xoşewistî","Glücklich"],["xemgîn","Traurig"],["mezin","Groß"],["piçûk","Klein"],["zû","Schnell"]
-]
+["xoşewistî","Glücklich"],["xemgîn","Traurig"],["mezin","Groß"],["piçûk","Klein"],["zû","Schnell"]]
 };
 
-// --- Username & Navigation ---
-function setUsername(){
-username=document.getElementById('usernameInput').value.trim();
-if(username){points=0; showLanguageScreen(); updatePointsAndRank();}
-}
+// --- Screens ---
+function hideAllScreens(){['usernameScreen','languageScreen','methodScreen','gameScreen','leaderboardScreen'].forEach(id=>document.getElementById(id).style.display='none');}
 function showUsernameScreen(){hideAllScreens(); document.getElementById('usernameScreen').style.display='block';}
 function showLanguageScreen(){hideAllScreens(); document.getElementById('languageScreen').style.display='block';}
-function selectLanguage(lang){language=lang; showMethodScreen();}
 function showMethodScreen(){hideAllScreens(); document.getElementById('methodScreen').style.display='block';}
-function startGame(selectedMethod){method=selectedMethod; hideAllScreens(); document.getElementById('gameScreen').style.display='block';
-document.getElementById('methodTitle').innerText=method==='memory'?'Memory-Spiel':method==='flashcards'?'Karteikarten':'Wörter lernen';
-if(method==='memory') setupMemory();
-else if(method==='flashcards') setupFlashcards();
-else setupNormalLearning();}
 function goToMethods(){showMethodScreen();}
 function goToLanguage(){showLanguageScreen();}
-function hideAllScreens(){['usernameScreen','languageScreen','methodScreen','gameScreen','leaderboardScreen'].forEach(id=>document.getElementById(id).style.display='none');}
-function updatePointsAndRank(){document.getElementById('pointsDisplay').innerText=`Punkte: ${points}`; let currentRank=rankThresholds[0].name; let nextRankPoints=rankThresholds[1].points;
-for(let i=0;i<rankThresholds.length;i++){if(points>=rankThresholds[i].points) currentRank=rankThresholds[i].name; if(i<rankThresholds.length-1) nextRankPoints=rankThresholds[i+1].points;}
-document.getElementById('rankDisplay').innerText=`Rang: ${currentRank} (nächster Rang: ${nextRankPoints} Punkte)`;}
-function showLeaderboard(){hideAllScreens(); document.getElementById('leaderboardScreen').style.display='block';
-let leaderboard=JSON.parse(localStorage.getItem('triolingoLeaderboard')||'[]'); leaderboard.push({username,points}); leaderboard.sort((a,b)=>b.points-a.points); if(leaderboard.length>10) leaderboard=leaderboard.slice(0,10); localStorage.setItem('triolingoLeaderboard',JSON.stringify(leaderboard));
-const list=document.getElementById('leaderboardList'); list.innerHTML=''; leaderboard.forEach(player=>{const li=document.createElement('li'); li.innerText=`${player.username}: ${player.points} Punkte`; list.appendChild(li);});}
 
-// --- MEMORY ---
+// --- Punkte & Ränge ---
+function updatePointsAndRank(){
+  document.getElementById('pointsDisplay').innerText=`Punkte: ${points}`;
+  let currentRank=rankThresholds[0].name; let nextRankPoints=rankThresholds[1].points;
+  for(let i=0;i<rankThresholds.length;i++){
+    if(points>=rankThresholds[i].points) currentRank=rankThresholds[i].name;
+    if(i<rankThresholds.length-1) nextRankPoints=rankThresholds[i+1].points;
+  }
+  document.getElementById('rankDisplay').innerText=`Rang: ${currentRank} (nächster Rang: ${nextRankPoints} Punkte)`;
+}
+
+// --- Leaderboard ---
+function showLeaderboard(){
+  hideAllScreens(); document.getElementById('leaderboardScreen').style.display='block';
+  let leaderboard=JSON.parse(localStorage.getItem('triolingoLeaderboard')||'[]');
+  leaderboard.push({username,points});
+  leaderboard.sort((a,b)=>b.points-a.points);
+  if(leaderboard.length>10) leaderboard=leaderboard.slice(0,10);
+  localStorage.setItem('triolingoLeaderboard',JSON.stringify(leaderboard));
+  const list=document.getElementById('leaderboardList'); list.innerHTML='';
+  leaderboard.forEach(player=>{const li=document.createElement('li'); li.innerText=`${player.username}: ${player.points} Punkte`; list.appendChild(li);});
+}
+
+// --- Username & Language ---
+function setUsername(){
+  const input=document.getElementById('usernameInput').value.trim();
+  if(input){username=input; points=0; showLanguageScreen(); updatePointsAndRank();}
+  else alert('Bitte Benutzernamen eingeben');
+}
+function selectLanguage(lang){language=lang; showMethodScreen();}
+
+// --- Lernmethoden ---
+function startGame(selectedMethod){
+  method=selectedMethod; hideAllScreens(); document.getElementById('gameScreen').style.display='block';
+  document.getElementById('methodTitle').innerText=method==='memory'?'Memory-Spiel':method==='flashcards'?'Karteikarten':'Wörter lernen';
+  if(method==='memory') setupMemory();
+  else if(method==='flashcards') setupFlashcards();
+  else setupNormalLearning();
+}
+
+// --- Memory ---
 let firstCard=null, secondCard=null, lockBoard=false;
 function setupMemory(){
-const board=document.getElementById('gameBoard'); board.innerHTML=''; let selectedWords=[...words[language]].sort(()=>0.5-Math.random());
-let cards=[]; selectedWords.forEach(pair=>{cards.push(pair[0]); cards.push(pair[1]);}); cards.sort(()=>0.5-Math.random());
-cards.forEach(word=>{const card=document.createElement('div'); card.classList.add('card'); card.dataset.word=word; card.innerText='?'; card.onclick=flipCard; board.appendChild(card);});}
-function flipCard(){if(lockBoard||this===firstCard) return; this.classList.add('flipped'); this.innerText=this.dataset.word; if(!firstCard){firstCard=this; return;} secondCard=this; checkMatch();}
-function checkMatch(){let isMatch=false; for(let lang in words){words[lang].forEach(pair=>{if((pair[0]===firstCard.dataset.word&&pair[1]===secondCard.dataset.word)||(pair[1]===firstCard.dataset.word&&pair[0]===secondCard.dataset.word)) isMatch=true;});}
-if(isMatch){let earned=20; points+=earned; alert(`Richtig! +${earned} Punkte`); updatePointsAndRank(); resetMemory();}else{lockBoard=true; setTimeout(()=>{firstCard.classList.remove('flipped'); secondCard.classList.remove('flipped'); firstCard.innerText='?'; secondCard.innerText='?'; resetMemory();},800);}}
+  const board=document.getElementById('gameBoard'); board.innerHTML='';
+  let selectedWords=[...words[language]].sort(()=>0.5-Math.random());
+  let cards=[]; selectedWords.forEach(pair=>{cards.push(pair[0]); cards.push(pair[1]);});
+  cards.sort(()=>0.5-Math.random());
+  cards.forEach(word=>{
+    const card=document.createElement('div'); card.classList.add('card'); card.dataset.word=word; card.innerText='?'; card.onclick=flipCard; board.appendChild(card);
+  });
+}
+function flipCard(){
+  if(lockBoard||this===firstCard) return; this.classList.add('flipped'); this.innerText=this.dataset.word;
+  if(!firstCard){firstCard=this; return;} secondCard=this; checkMatch();
+}
+function checkMatch(){
+  let isMatch=false; words[language].forEach(pair=>{
+    if((pair[0]===firstCard.dataset.word && pair[1]===secondCard.dataset.word) ||
+       (pair[1]===firstCard.dataset.word && pair[0]===secondCard.dataset.word)) isMatch=true;
+  });
+  if(isMatch){ points+=20; alert(`Richtig! +20 Punkte`); updatePointsAndRank(); resetMemory();}
+  else{lockBoard=true; setTimeout(()=>{firstCard.classList.remove('flipped'); secondCard.classList.remove('flipped'); firstCard.innerText='?'; secondCard.innerText='?'; resetMemory();},800);}
+}
 function resetMemory(){[firstCard,secondCard]=[null,null]; lockBoard=false;}
 
-// --- FLASHCARDS ---
-let flashIndex=0;
-function setupFlashcards(){const board=document.getElementById('gameBoard'); board.innerHTML=''; flashIndex=0; showFlashcard();}
-function showFlashcard(){const board=document.getElementById('gameBoard'); board.innerHTML=''; const pair=words[language][Math.floor(Math.random()*words[language].length)];
-const card=document.createElement('div'); card.classList.add('flashcard'); card.innerText=pair[0]; card.onclick=()=>{card.innerText=pair[1];}; board.appendChild(card);
-const nextBtn=document.createElement('button'); nextBtn.innerText='Richtig'; nextBtn.onclick=()=>{points+=10; alert(`Richtig! +10 Punkte`); updatePointsAndRank
+// --- Flashcards ---
+function setupFlashcards(){
+  const board=document.getElementById('gameBoard'); board.innerHTML='';
+  const pair=words[language][Math.floor(Math.random()*words[language].length)];
+  const card=document.createElement('div'); card.classList.add('flashcard'); card.innerText=pair[0]; card.onclick=()=>{card.innerText=pair[1];}; board.appendChild(card);
+  const nextBtn=document.createElement('button'); nextBtn.innerText='Richtig'; nextBtn.onclick=()=>{points+=10; alert(`Richtig! +10 Punkte`); updatePointsAndRank(); setupFlashcards();}; board.appendChild(nextBtn);
+}
+
+// --- Normal Learning ---
+function setupNormalLearning(){
+  const pair=words[language][Math.floor(Math.random()*words[language].length)];
+  const board=document.getElementById('gameBoard'); board.innerHTML='';
+  const wordDiv=document.createElement('div'); wordDiv.innerText=pair[0]; wordDiv.style.fontSize='24px'; board.appendChild(wordDiv);
+  const correctBtn=document.createElement('button'); correctBtn.innerText=pair[1]; correctBtn.onclick=()=>{points+=15; alert(`Richtig! +15 Punkte`); updatePointsAndRank(); setupNormalLearning();};
+  const skipBtn=document.createElement('button'); skipBtn.innerText='Falsch'; skipBtn.onclick=()=>{setupNormalLearning();};
+  board.appendChild(correctBtn); board.appendChild(skipBtn);
+}
+
+// --- Start ---
+showUsernameScreen();
+</script>
+
+</body>
+</html>
