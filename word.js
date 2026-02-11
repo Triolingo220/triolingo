@@ -11,15 +11,45 @@ const words = {
     ["so","so"],["up","oben"],["out","raus"],["if","wenn"],["about","über"],
     ["who","wer"],["get","bekommen"],["which","welcher"],["go","gehen"],["me","mir"],
     ["when","wann"],["make","machen"],["can","können"],["like","mögen"],["time","Zeit"],
-    ["no","nein"],["just","genau"],["him","ihm"],["know","wissen"],["take","nehmen"]
+    ["no","nein"],["just","genau"],["him","ihm"],["know","wissen"],["take","nehmen"],
+    ["people","Menschen"],["into","hinein"],["year","Jahr"],["your","dein"],["good","gut"],
+    ["some","einige"],["could","konnte"],["them","sie"],["see","sehen"],["other","andere"],
+    ["than","als"],["then","dann"],["now","jetzt"],["look","schauen"],["only","nur"],
+    ["come","kommen"],["its","sein"],["over","über"],["think","denken"],["also","auch"],
+    ["back","zurück"],["after","nach"],["use","benutzen"],["two","zwei"],["how","wie"],
+    ["our","unser"],["work","arbeiten"],["first","erste"],["well","gut"],["way","Weg"],
+    ["even","sogar"],["new","neu"],["want","wollen"],["because","weil"],["any","irgendein"],
+    // … bis ca. 200 Wörter
   ],
+
   russisch: [
     ["я","ich"],["ты","du"],["он","er"],["она","sie"],["мы","wir"],
     ["вы","ihr/Sie"],["они","sie"],["это","das ist"],["что","was"],["не","nicht"],
-    ["да","ja"],["нет","nein"],["и","und"],["в","in"],["на","auf"]
+    ["да","ja"],["нет","nein"],["и","und"],["в","in"],["на","auf"],
+    ["с","mit"],["по","nach"],["как","wie"],["к","zu"],["у","bei"],
+    ["за","für"],["от","von"],["из","aus"],["о","über"],["же","aber"],
+    ["же","auch"],["так","so"],["его","sein(e)"],["ее","ihr(e)"],["их","ihr"],
+    ["для","für"],["быть","sein"],["есть","essen/sein"],["иметь","haben"],["делать","machen"],
+    ["говорить","sprechen"],["идти","gehen"],["видеть","sehen"],["думать","denken"],["жить","leben"],
+    ["работать","arbeiten"],["учить","lernen"],["слово","Wort"],["дом","Haus"],["город","Stadt"],
+    ["машина","Auto"],["улица","Straße"],["вода","Wasser"],["еда","Essen"],["день","Tag"],
+    ["ночь","Nacht"],["рука","Hand"],["кот","Katze"],["собака","Hund"],["друг","Freund"],
+    ["семья","Familie"],["любовь","Liebe"],["время","Zeit"],["дело","Sache"],["место","Ort"],
+    ["жена","Ehefrau"],["муж","Ehemann"],["ребенок","Kind"],["мать","Mutter"],["отец","Vater"],
+    // … bis ca. 200 Wörter
   ],
+
   kurdisch: [
     ["ez","ich"],["tu","du"],["ew","er/sie/es"],["em","wir"],["hûn","ihr"],
-    ["ew","sie (Pl)"],["ev","dies"],["ji","von"],["li","in/an"],["bi","mit"]
+    ["ew","sie (Pl)"],["ev","dies"],["ji","von"],["li","in/an"],["bi","mit"],
+    ["ji","aus"],["û","und"],["ne","nicht"],["belê","ja"],["na","nein"],
+    ["min","mein"],["te","dein"],["wî","sein(e)"],["ê","sein(e) fem"],["me","unser"],
+    ["hun","euer"],["xerîb","Fremd"],["xwende","lernen"],["bext","Glück"],["dil","Herz"],
+    ["mal","Haus"],["nav","Name"],["roj","Tag"],["şev","Nacht"],["av","Wasser"],
+    ["nan","Brot"],["goşt","Fleisch"],["êvar","Abend"],["sibeh","Morgen"],["rê","Weg"],
+    ["zarok","Kind"],["bav","Vater"],["dayik","Mutter"],["birayê","Bruder"],["xwişk","Schwester"],
+    ["dost","Freund"],["ewîn","Liebe"],["xwarin","essen"],["vexwarin","trinken"],["çûn","gehen"],
+    ["hatin","kommen"],["xwestin","wollen"],["fêmkirin","verstehen"],["çawa","wie"],["ku","wo"],
+    ["kîjan","welcher"],["ziman","Sprache"],["derbas","vorbei"],["çend","wie viel"],// … bis ca. 200 Wörter
   ]
 };
