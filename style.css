@@ -4,12 +4,11 @@ body {
   color: white;
   margin: 0;
   padding: 0;
-  text-align: center;
 }
 
 header {
   padding: 15px 20px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255,255,255,0.15);
   backdrop-filter: blur(12px);
   display: flex;
   justify-content: space-between;
@@ -17,52 +16,26 @@ header {
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
-header h1 {
-  margin: 0;
-  font-size: 24px;
-}
-
-nav button {
-  margin-left: 10px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.25);
-  color: white;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: 0.3s;
-}
-
-nav button:hover {
-  background: rgba(255,255,255,0.4);
-}
+header h1 { margin: 0; font-size: 24px; }
+nav button { margin-left: 10px; }
 
 button {
-  padding: 10px 20px;
+  padding: 8px 16px;
   margin: 5px;
   font-size: 16px;
   border: none;
   border-radius: 12px;
-  background: rgba(255,255,255,0.25);
-  color: white;
   cursor: pointer;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  color: white;
   transition: 0.3s;
 }
 
-button:hover {
-  background: rgba(255,255,255,0.4);
-  transform: translateY(-2px);
-}
+button:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
 
-input {
-  padding: 8px;
-  border-radius: 8px;
-  border: none;
-  margin: 5px;
-}
+input { padding: 8px; border-radius: 8px; border: none; margin: 5px; }
 
 #gameBoard {
   display: grid;
@@ -75,8 +48,8 @@ input {
 .card, .flashcard {
   width: 100px;
   height: 100px;
-  background: rgba(255,255,255,0.25);
-  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -84,41 +57,20 @@ input {
   font-size: 16px;
   cursor: pointer;
   user-select: none;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
   transition: 0.3s;
-  color: black;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
 
-.card.flipped, .flashcard.flipped {
-  background: rgba(255,255,255,0.45);
-  color: black;
-  box-shadow: 0 8px 25px rgba(255,255,255,0.3);
-}
+.card.flipped { background: rgba(255,255,255,0.3); color: #fff; box-shadow: 0 8px 25px rgba(255,255,255,0.25); }
 
-.screen {
-  display: none;
-  margin-top: 20px;
-}
+.screen { display: none; text-align:center; margin-top:30px; }
+#pointsRank { margin: 5px; font-weight: bold; }
 
-.correct {
-  background: rgba(46,204,113,0.8) !important;
-  box-shadow: 0 0 15px rgba(46,204,113,0.8) !important;
-}
+.correct { background: rgba(46,204,113,0.8) !important; box-shadow: 0 0 15px rgba(46,204,113,0.8) !important;}
+.wrong { background: rgba(231,76,60,0.8) !important; box-shadow: 0 0 15px rgba(231,76,60,0.8) !important; }
 
-.wrong {
-  background: rgba(231,76,60,0.8) !important;
-  box-shadow: 0 0 15px rgba(231,76,60,0.8) !important;
-}
-
-.pass-container {
-  position: relative;
-  display: inline-block;
-}
-
-.pass-container input {
-  padding-right: 30px;
-}
-
+.pass-container { position: relative; display:inline-block; }
+.pass-container input { padding-right:30px; }
 .pass-container .toggle-pass {
   position: absolute;
   right: 5px;
