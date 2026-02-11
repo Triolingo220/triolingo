@@ -8,7 +8,7 @@ body { font-family: Arial; background:#eef2f7; text-align:center; margin:0; padd
 header { background:#4a90e2; color:white; padding:20px;}
 button {padding:10px 20px; margin:5px; font-size:16px; cursor:pointer; border:none; border-radius:5px; transition:0.2s;}
 button:hover{opacity:0.8;}
-#gameBoard{display:grid; grid-template-columns:repeat(4,100px); gap:10px; justify-content:center; margin:20px 0;}
+#gameBoard{display:grid; grid-template-columns:repeat(4,120px); gap:10px; justify-content:center; margin:20px 0;}
 .card,.flashcard{width:100px;height:100px;background:#2c3e50;color:white; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; border-radius:8px; user-select:none;}
 .card.flipped{background:#3498db;}
 #usernameScreen,#languageScreen,#methodScreen,#gameScreen,#leaderboardScreen{display:none; margin-top:30px;}
@@ -154,29 +154,73 @@ function startGame(selectedMethod){
   else setupNormalLearning();
 }
 
-// --- Memory ---
+// --- Memory (20 Wörter + 100 Punkte pro Runde) ---
 let firstCard=null, secondCard=null, lockBoard=false;
+let matchedPairs=0, totalPairs=0;
 function setupMemory(){
-  const board=document.getElementById('gameBoard'); board.innerHTML='';
-  let selectedWords=[...words[language]].sort(()=>0.5-Math.random());
-  let cards=[]; selectedWords.forEach(pair=>{cards.push(pair[0]); cards.push(pair[1]);});
+  const board=document.getElementById('gameBoard'); 
+  board.innerHTML='';
+  matchedPairs = 0;
+
+  let selectedWords=[...words[language]].sort(()=>0.5-Math.random()).slice(0,20);
+  totalPairs = selectedWords.length;
+
+  let cards=[]; 
+  selectedWords.forEach(pair=>{cards.push(pair[0]); cards.push(pair[1]);});
   cards.sort(()=>0.5-Math.random());
+
   cards.forEach(word=>{
-    const card=document.createElement('div'); card.classList.add('card'); card.dataset.word=word; card.innerText='?'; card.onclick=flipCard; board.appendChild(card);
+    const card=document.createElement('div'); 
+    card.classList.add('card'); 
+    card.dataset.word=word; 
+    card.innerText='?'; 
+    card.onclick=flipCard; 
+    board.appendChild(card);
   });
 }
+
 function flipCard(){
-  if(lockBoard||this===firstCard) return; this.classList.add('flipped'); this.innerText=this.dataset.word;
-  if(!firstCard){firstCard=this; return;} secondCard=this; checkMatch();
+  if(lockBoard||this===firstCard) return; 
+  this.classList.add('flipped'); 
+  this.innerText=this.dataset.word;
+
+  if(!firstCard){firstCard=this; return;} 
+  secondCard=this; 
+  checkMatch();
 }
+
 function checkMatch(){
-  let isMatch=false; words[language].forEach(pair=>{
+  let isMatch=false; 
+  words[language].forEach(pair=>{
     if((pair[0]===firstCard.dataset.word && pair[1]===secondCard.dataset.word) ||
        (pair[1]===firstCard.dataset.word && pair[0]===secondCard.dataset.word)) isMatch=true;
   });
-  if(isMatch){ points+=20; alert(`Richtig! +20 Punkte`); updatePointsAndRank(); resetMemory();}
-  else{lockBoard=true; setTimeout(()=>{firstCard.classList.remove('flipped'); secondCard.classList.remove('flipped'); firstCard.innerText='?'; secondCard.innerText='?'; resetMemory();},800);}
+
+  if(isMatch){
+    matchedPairs++;
+    firstCard.removeEventListener('click',flipCard);
+    secondCard.removeEventListener('click',flipCard);
+    resetMemory();
+
+    if(matchedPairs === totalPairs){
+      points += 100;
+      alert(`Memory abgeschlossen! +100 Punkte`);
+      updatePointsAndRank();
+      setupMemory(); // neue Runde starten
+    }
+
+  } else{
+    lockBoard=true; 
+    setTimeout(()=>{
+      firstCard.classList.remove('flipped'); 
+      secondCard.classList.remove('flipped'); 
+      firstCard.innerText='?'; 
+      secondCard.innerText='?'; 
+      resetMemory();
+    },800);
+  }
 }
+
 function resetMemory(){[firstCard,secondCard]=[null,null]; lockBoard=false;}
 
 // --- Flashcards ---
@@ -187,14 +231,39 @@ function setupFlashcards(){
   const nextBtn=document.createElement('button'); nextBtn.innerText='Richtig'; nextBtn.onclick=()=>{points+=10; alert(`Richtig! +10 Punkte`); updatePointsAndRank(); setupFlashcards();}; board.appendChild(nextBtn);
 }
 
-// --- Normal Learning ---
+// --- Normal Learning mit 4 Antwortmöglichkeiten ---
 function setupNormalLearning(){
-  const pair=words[language][Math.floor(Math.random()*words[language].length)];
-  const board=document.getElementById('gameBoard'); board.innerHTML='';
-  const wordDiv=document.createElement('div'); wordDiv.innerText=pair[0]; wordDiv.style.fontSize='24px'; board.appendChild(wordDiv);
-  const correctBtn=document.createElement('button'); correctBtn.innerText=pair[1]; correctBtn.onclick=()=>{points+=15; alert(`Richtig! +15 Punkte`); updatePointsAndRank(); setupNormalLearning();};
-  const skipBtn=document.createElement('button'); skipBtn.innerText='Falsch'; skipBtn.onclick=()=>{setupNormalLearning();};
-  board.appendChild(correctBtn); board.appendChild(skipBtn);
+  const pair = words[language][Math.floor(Math.random()*words[language].length)]; 
+  const board = document.getElementById('gameBoard'); 
+  board.innerHTML = '';
+  
+  const wordDiv = document.createElement('div'); 
+  wordDiv.innerText = pair[0]; 
+  wordDiv.style.fontSize = '24px'; 
+  board.appendChild(wordDiv);
+
+  let options = [pair[1]]; 
+  while(options.length < 4){
+    let randPair = words[language][Math.floor(Math.random()*words[language].length)];
+    if(!options.includes(randPair[1])) options.push(randPair[1]);
+  }
+  options.sort(()=>0.5 - Math.random());
+
+  options.forEach(opt=>{
+    const btn = document.createElement('button'); 
+    btn.innerText = opt;
+    btn.onclick = ()=>{
+      if(opt === pair[1]){
+        points += 15;
+        alert(`Richtig! +15 Punkte`);
+      } else {
+        alert(`Falsch! +0 Punkte`);
+      }
+      updatePointsAndRank();
+      setupNormalLearning(); 
+    };
+    board.appendChild(btn);
+  });
 }
 
 // --- Start ---
