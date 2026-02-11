@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Triolingo</title>
+
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    background: #f4f6f8;
+}
+
+h1 {
+    color: darkblue;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#gameBoard {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.card {
+    width: 100px;
+    height: 100px;
+    background: #2c3e50;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.card.flipped {
+    background: #3498db;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🌍 Triolingo</h1>
+
+<h2 id="rank">Rang: Anfänger</h2>
+<h3 id="points">Punkte: 0</h3>
+
+<div>
+    <button onclick="startGame('englisch')">Englisch</button>
+    <button onclick="startGame('russisch')">Russisch</button>
+    <button onclick="startGame('kurdisch')">Kurdisch</button>
+</div>
+
+<div id="gameBoard"></div>
+
+<script>
+
+let points = 0;
+let firstCard = null;
+let secondCard = null;
+let lockBoard = false;
+
+const words = {
+    englisch: [
+        ["dog", "Hund"],
+        ["cat", "Katze"],
+        ["house", "Haus"],
+        ["water", "Wasser"]
+    ],
+    russisch: [
+        ["собака", "Hund"],
+        ["кот", "Katze"],
+        ["дом", "Haus"],
+        ["вода", "Wasser"]
+    ],
+    kurdisch: [
+        ["kûçik", "Hund"],
+        ["pisîk", "Katze"],
+        ["mal", "Haus"],
+        ["av", "Wasser"]
+    ]
+};
+
+function startGame(language) {
+    document.getElementById("gameBoard").innerHTML = "";
+    let selectedWords = words[language];
+    let cards = [];
+
+    selectedWords.forEach(pair => {
+        cards.push(pair[0]);
+        cards.push(pair[1]);
+    });
+
+    cards.sort(() => 0.5 - Math.random());
+
+    cards.forEach(word => {
+        let card = document.createElement("div");
+        card.classList.add("card");
+        card.dataset.word = word;
+        card.innerText = "?";
+        card.onclick = flipCard;
+        document.getElementById("gameBoard").appendChild(card);
+    });
+}
+
+function flipCard() {
+    if (lockBoard) return;
+    if (this === firstCard) return;
+
+    this.classList.add("flipped");
+    this.innerText = this.dataset.word;
+
+    if (!firstCard) {
+        firstCard = this;
+        return;
+    }
+
+    secondCard = this;
+    checkMatch();
+}
+
+function checkMatch() {
+    let isMatch = false;
+
+    for (let lang in words) {
+        words[lang].forEach(pair => {
+            if (
+                (pair[0] === firstCard.dataset.word && pair[1] === secondCard.dataset.word) ||
+                (pair[1] === firstCard.dataset.word && pair[0] === secondCard.dataset.word)
+            ) {
+                isMatch = true;
+            }
+        });
+    }
+
+    if (isMatch) {
+        points += 10;
+        updateRank();
+        resetBoard();
+    } else {
+        lockBoard = true;
+        setTimeout(() => {
+            firstCard.classList.remove("flipped");
+            secondCard.classList.remove("flipped");
+            firstCard.innerText = "?";
+            secondCard.innerText = "?";
+            resetBoard();
+        }, 800);
+    }
+}
+
+function resetBoard() {
+    [firstCard, secondCard] = [null, null];
+    lockBoard = false;
+}
+
+function updateRank() {
+    document.getElementById("points").innerText = "Punkte: " + points;
+
+    let rank = "Anfänger";
+
+    if (points >= 30) rank = "Fortgeschritten";
+    if (points >= 60) rank = "Meister";
+
+    document.getElementById("rank").innerText = "Rang: " + rank;
+}
+
+</script>
+
+</body>
+</html>
