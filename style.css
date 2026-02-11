@@ -45,29 +45,11 @@ input { padding: 8px; border-radius: 8px; border: none; margin: 5px; }
   margin: 20px 0;
 }
 
-.card, .flashcard {
-  width: 100px;
-  height: 100px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  cursor: pointer;
-  user-select: none;
-  transition: 0.3s;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-.card.flipped { background: rgba(255,255,255,0.3); color: #fff; box-shadow: 0 8px 25px rgba(255,255,255,0.25); }
-
 .screen { display: none; text-align:center; margin-top:30px; }
 #pointsRank { margin: 5px; font-weight: bold; }
 
-.correct { background: rgba(46,204,113,0.8) !important; box-shadow: 0 0 15px rgba(46,204,113,0.8) !important;}
-.wrong { background: rgba(231,76,60,0.8) !important; box-shadow: 0 0 15px rgba(231,76,60,0.8) !important; }
+.correct { background: rgba(46,204,113,0.8) !important; }
+.wrong { background: rgba(231,76,60,0.8) !important; }
 
 .pass-container { position: relative; display:inline-block; }
 .pass-container input { padding-right:30px; }
