@@ -6,27 +6,33 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <header>
   <h1>Triolingo</h1>
-  <div id="navbar">
-    <button onclick="showLanguageScreen()">Sprache wählen</button>
-    <button onclick="goToMethods()">Lernmethode</button>
-    <button onclick="showProfile()">Profil</button>
+  <nav id="navBar" style="display:none;">
+    <button onclick="showLanguageScreen()">Sprache</button>
     <button onclick="showLeaderboard()">Rangliste</button>
-  </div>
-  <div id="pointsDisplay"></div>
-  <div id="rankDisplay"></div>
+    <button onclick="showProfile()">Profil</button>
+    <button onclick="logoutUser()">Abmelden</button>
+  </nav>
 </header>
 
-<!-- Benutzername -->
-<div id="usernameScreen">
-  <h2>Gib deinen Benutzernamen ein</h2>
-  <input type="text" id="usernameInput" placeholder="Benutzername"><br>
-  <button onclick="setUsername()">Starten</button>
+<div id="pointsRank" style="display:none;">Punkte: 0 | Rang: Anfänger</div>
+
+<!-- Login / Registrierung -->
+<div id="loginScreen" class="screen">
+  <h2>Anmelden oder Registrieren</h2>
+  <input type="text" id="loginUsername" placeholder="Benutzername"><br>
+  <div class="pass-container">
+    <input type="password" id="loginPassword" placeholder="Passwort">
+    <span class="toggle-pass" onclick="togglePassword('loginPassword')">👁️</span>
+  </div><br>
+  <button onclick="loginUser()">Anmelden</button>
+  <button onclick="registerUser()">Registrieren</button>
 </div>
 
 <!-- Sprache wählen -->
-<div id="languageScreen">
+<div id="languageScreen" class="screen">
   <h2>Wähle eine Sprache</h2>
   <button onclick="selectLanguage('englisch')">Englisch</button>
   <button onclick="selectLanguage('russisch')">Russisch</button>
@@ -34,7 +40,7 @@
 </div>
 
 <!-- Lernmethode -->
-<div id="methodScreen">
+<div id="methodScreen" class="screen">
   <h2>Wähle Lernmethode</h2>
   <button onclick="startGame('memory')">Memory</button>
   <button onclick="startGame('flashcards')">Karteikarten</button>
@@ -42,24 +48,26 @@
 </div>
 
 <!-- Spielbereich -->
-<div id="gameScreen">
+<div id="gameScreen" class="screen">
   <h2 id="methodTitle"></h2>
   <div id="gameBoard"></div>
 </div>
 
 <!-- Rangliste -->
-<div id="leaderboardScreen">
+<div id="leaderboardScreen" class="screen">
   <h2>Top 10 Spieler</h2>
   <ol id="leaderboardList"></ol>
 </div>
 
 <!-- Profil -->
-<div id="profileScreen" style="display:none; margin-top:30px;">
+<div id="profileScreen" class="screen">
   <h2>Profil</h2>
-  <p><strong>Benutzername:</strong> <span id="profileUsername"></span></p>
-  <p><strong>Punkte:</strong> <span id="profilePoints"></span></p>
-  <p><strong>Rang:</strong> <span id="profileRank"></span></p>
-  <button onclick="logout()">Abmelden</button>
+  <p>Benutzername: <span id="profileUsername"></span></p>
+  <div class="pass-container">
+    Passwort: <input type="password" id="profilePassword" disabled>
+    <span class="toggle-pass" onclick="togglePassword('profilePassword')">👁️</span>
+  </div>
+  <p id="profilePointsRank"></p>
 </div>
 
 <script src="words.js"></script>
