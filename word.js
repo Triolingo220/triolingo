@@ -56,7 +56,7 @@ const words = {
     ["ez","ich"],["tu","du"],["ew","er/sie/es"],["em","wir"],["hûn","ihr"],
     ["ew","sie (Pl)"],["ev","dies"],["ji","von"],["li","in/an"],["bi","mit"],
     ["ji","aus"],["û","und"],["ne","nicht"],["belê","ja"],["na","nein"],
-    ["min","mein"],["te","dein"],["wî","sein(e)"],["ê","sein(e) fem"],["me","unser"],
+    ["min","mein"],["te","dein"],["wî","sein(e)"],["ê","sein(e fem)"],["me","unser"],
     ["hun","euer"],["xerîb","Fremd"],["xwende","lernen"],["bext","Glück"],["dil","Herz"],
     ["mal","Haus"],["nav","Name"],["roj","Tag"],["şev","Nacht"],["av","Wasser"],
     ["nan","Brot"],["goşt","Fleisch"],["êvar","Abend"],["sibeh","Morgen"],["rê","Weg"],
