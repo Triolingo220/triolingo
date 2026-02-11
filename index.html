@@ -4,16 +4,102 @@
 <meta charset="UTF-8">
 <title>Triolingo 2.0</title>
 <style>
-body { font-family: Arial; background:#eef2f7; text-align:center; margin:0; padding:0;}
-header { background:#4a90e2; color:white; padding:20px;}
-button {padding:10px 20px; margin:5px; font-size:16px; cursor:pointer; border:none; border-radius:5px; transition:0.2s;}
-button:hover{opacity:0.8;}
-#gameBoard{display:grid; grid-template-columns:repeat(4,120px); gap:10px; justify-content:center; margin:20px 0;}
-.card,.flashcard{width:100px;height:100px;background:#2c3e50;color:white; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; border-radius:8px; user-select:none;}
-.card.flipped{background:#3498db;}
-#usernameScreen,#languageScreen,#methodScreen,#gameScreen,#leaderboardScreen{display:none; margin-top:30px;}
-#pointsDisplay{margin:10px; font-weight:bold;}
-#rankDisplay{margin:5px;}
+/* Body */
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+header {
+  padding: 20px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  border-radius: 0 0 15px 15px;
+  color: white;
+}
+
+/* Buttons */
+button {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  transition: 0.3s;
+  
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  color: white;
+}
+
+button:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+
+/* Game Board */
+#gameBoard {
+  display: grid;
+  grid-template-columns: repeat(4, 120px);
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+/* Cards / Flashcards */
+.card, .flashcard {
+  width: 100px;
+  height: 100px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.3s;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.card.flipped {
+  background: rgba(255,255,255,0.3);
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(255,255,255,0.25);
+}
+
+/* Screens */
+#usernameScreen, #languageScreen, #methodScreen, #gameScreen, #leaderboardScreen {
+  display: none;
+  margin-top: 30px;
+}
+
+/* Points / Rank */
+#pointsDisplay, #rankDisplay {
+  margin: 5px;
+  font-weight: bold;
+}
+
+/* Correct / Wrong Feedback */
+.correct {
+  background: rgba(46,204,113,0.8) !important;
+  box-shadow: 0 0 15px rgba(46,204,113,0.8) !important;
+}
+
+.wrong {
+  background: rgba(231,76,60,0.8) !important;
+  box-shadow: 0 0 15px rgba(231,76,60,0.8) !important;
+}
 </style>
 </head>
 <body>
@@ -72,38 +158,11 @@ const rankThresholds = [
 {name:'Meister', points:500}
 ];
 
-// --- Beispielhafte Alltagswörter (50 Wörter pro Sprache) ---
+// --- Beispielhafte Wörter ---
 const words = {
-englisch:[["apple","Apfel"],["house","Haus"],["dog","Hund"],["cat","Katze"],["water","Wasser"],
-["book","Buch"],["school","Schule"],["car","Auto"],["tree","Baum"],["bread","Brot"],
-["milk","Milch"],["sun","Sonne"],["moon","Mond"],["star","Stern"],["city","Stadt"],
-["road","Straße"],["street","Straße"],["phone","Telefon"],["computer","Computer"],["chair","Stuhl"],
-["table","Tisch"],["window","Fenster"],["door","Tür"],["flower","Blume"],["garden","Garten"],
-["friend","Freund"],["family","Familie"],["love","Liebe"],["work","Arbeit"],["money","Geld"],
-["time","Zeit"],["day","Tag"],["night","Nacht"],["food","Essen"],["drink","Getränk"],
-["animal","Tier"],["bird","Vogel"],["fish","Fisch"],["mountain","Berg"],["river","Fluss"],
-["sea","Meer"],["rain","Regen"],["snow","Schnee"],["cold","Kalt"],["hot","Heiß"],
-["happy","Glücklich"],["sad","Traurig"],["big","Groß"],["small","Klein"],["fast","Schnell"]],
-russisch:[["яблоко","Apfel"],["дом","Haus"],["собака","Hund"],["кот","Katze"],["вода","Wasser"],
-["книга","Buch"],["школа","Schule"],["машина","Auto"],["дерево","Baum"],["хлеб","Brot"],
-["молоко","Milch"],["солнце","Sonne"],["луна","Mond"],["звезда","Stern"],["город","Stadt"],
-["дорога","Straße"],["улица","Straße"],["телефон","Telefon"],["компьютер","Computer"],["стул","Stuhl"],
-["стол","Tisch"],["окно","Fenster"],["дверь","Tür"],["цветок","Blume"],["сад","Garten"],
-["друг","Freund"],["семья","Familie"],["любовь","Liebe"],["работа","Arbeit"],["деньги","Geld"],
-["время","Zeit"],["день","Tag"],["ночь","Nacht"],["еда","Essen"],["напиток","Getränk"],
-["животное","Tier"],["птица","Vogel"],["рыба","Fisch"],["гора","Berg"],["река","Fluss"],
-["море","Meer"],["дождь","Regen"],["снег","Schnee"],["холодно","Kalt"],["жарко","Heiß"],
-["счастливый","Glücklich"],["грустный","Traurig"],["большой","Groß"],["маленький","Klein"],["быстрый","Schnell"]],
-kurdisch:[["sêv","Apfel"],["mal","Haus"],["kûçik","Hund"],["pisîk","Katze"],["av","Wasser"],
-["pirtûk","Buch"],["dibistan","Schule"],["erebê","Auto"],["dar","Baum"],["nan","Brot"],
-["şîr","Milch"],["roj","Sonne"],["heyv","Mond"],["stêr","Stern"],["bajar","Stadt"],
-["rê","Straße"],["kolan","Straße"],["telefon","Telefon"],["kompîter","Computer"],["kursî","Stuhl"],
-["masa","Tisch"],["pace","Fenster"],["derî","Tür"],["gul","Blume"],["baxçe","Garten"],
-["heval","Freund"],["malbat","Familie"],["evîn","Liebe"],["kar","Arbeit"],["dirav","Geld"],
-["dem","Zeit"],["rojek","Tag"],["şev","Nacht"],["xwarin","Essen"],["vexwarin","Getränk"],
-["ajî","Tier"],["bavik","Vogel"],["masî","Fisch"],["çiyayê","Berg"],["çem","Fluss"],
-["daryayê","Meer"],["baran","Regen"],["berf","Schnee"],["sar","Kalt"],["germ","Heiß"],
-["xoşewistî","Glücklich"],["xemgîn","Traurig"],["mezin","Groß"],["piçûk","Klein"],["zû","Schnell"]]
+englisch:[["apple","Apfel"],["house","Haus"],["dog","Hund"],["cat","Katze"],["water","Wasser"]],
+russisch:[["яблоко","Apfel"],["дом","Haus"],["собака","Hund"],["кот","Katze"],["вода","Wasser"]],
+kurdisch:[["sêv","Apfel"],["mal","Haus"],["kûçik","Hund"],["pisîk","Katze"],["av","Wasser"]]
 };
 
 // --- Screens ---
@@ -154,7 +213,7 @@ function startGame(selectedMethod){
   else setupNormalLearning();
 }
 
-// --- Memory (20 Wörter + 100 Punkte pro Runde) ---
+// --- Memory ---
 let firstCard=null, secondCard=null, lockBoard=false;
 let matchedPairs=0, totalPairs=0;
 function setupMemory(){
@@ -162,7 +221,7 @@ function setupMemory(){
   board.innerHTML='';
   matchedPairs = 0;
 
-  let selectedWords=[...words[language]].sort(()=>0.5-Math.random()).slice(0,20);
+  let selectedWords=[...words[language]].sort(()=>0.5-Math.random()).slice(0,5); // kürzer für Test
   totalPairs = selectedWords.length;
 
   let cards=[]; 
@@ -206,14 +265,16 @@ function checkMatch(){
       points += 100;
       alert(`Memory abgeschlossen! +100 Punkte`);
       updatePointsAndRank();
-      setupMemory(); // neue Runde starten
+      setupMemory();
     }
 
   } else{
     lockBoard=true; 
+    firstCard.classList.add('wrong');
+    secondCard.classList.add('wrong');
     setTimeout(()=>{
-      firstCard.classList.remove('flipped'); 
-      secondCard.classList.remove('flipped'); 
+      firstCard.classList.remove('flipped','wrong'); 
+      secondCard.classList.remove('flipped','wrong'); 
       firstCard.innerText='?'; 
       secondCard.innerText='?'; 
       resetMemory();
@@ -227,11 +288,20 @@ function resetMemory(){[firstCard,secondCard]=[null,null]; lockBoard=false;}
 function setupFlashcards(){
   const board=document.getElementById('gameBoard'); board.innerHTML='';
   const pair=words[language][Math.floor(Math.random()*words[language].length)];
-  const card=document.createElement('div'); card.classList.add('flashcard'); card.innerText=pair[0]; card.onclick=()=>{card.innerText=pair[1];}; board.appendChild(card);
-  const nextBtn=document.createElement('button'); nextBtn.innerText='Richtig'; nextBtn.onclick=()=>{points+=10; alert(`Richtig! +10 Punkte`); updatePointsAndRank(); setupFlashcards();}; board.appendChild(nextBtn);
+  const card=document.createElement('div'); card.classList.add('flashcard'); card.innerText=pair[0]; 
+  card.onclick=()=>{card.innerText=pair[1];}; board.appendChild(card);
+  
+  const nextBtn=document.createElement('button'); nextBtn.innerText='Richtig';
+  nextBtn.onclick=()=>{
+    nextBtn.classList.add('correct');
+    points+=10; 
+    updatePointsAndRank(); 
+    setTimeout(setupFlashcards, 800);
+  };
+  board.appendChild(nextBtn);
 }
 
-// --- Normal Learning mit 4 Antwortmöglichkeiten ---
+// --- Normal Learning ---
 function setupNormalLearning(){
   const pair = words[language][Math.floor(Math.random()*words[language].length)]; 
   const board = document.getElementById('gameBoard'); 
@@ -254,13 +324,13 @@ function setupNormalLearning(){
     btn.innerText = opt;
     btn.onclick = ()=>{
       if(opt === pair[1]){
+        btn.classList.add("correct");
         points += 15;
-        alert(`Richtig! +15 Punkte`);
       } else {
-        alert(`Falsch! +0 Punkte`);
+        btn.classList.add("wrong");
       }
       updatePointsAndRank();
-      setupNormalLearning(); 
+      setTimeout(setupNormalLearning, 800);
     };
     board.appendChild(btn);
   });
