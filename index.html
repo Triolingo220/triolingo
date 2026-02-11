@@ -19,7 +19,6 @@
 
 <div id="pointsRank" style="display:none;">Punkte: 0 | Rang: Anfänger</div>
 
-<!-- Login / Registrierung -->
 <div id="loginScreen" class="screen">
   <h2>Anmelden oder Registrieren</h2>
   <input type="text" id="loginUsername" placeholder="Benutzername"><br>
@@ -31,7 +30,6 @@
   <button onclick="registerUser()">Registrieren</button>
 </div>
 
-<!-- Sprache wählen -->
 <div id="languageScreen" class="screen">
   <h2>Wähle eine Sprache</h2>
   <button onclick="selectLanguage('englisch')">Englisch</button>
@@ -39,7 +37,6 @@
   <button onclick="selectLanguage('kurdisch')">Kurdisch</button>
 </div>
 
-<!-- Lernmethode -->
 <div id="methodScreen" class="screen">
   <h2>Wähle Lernmethode</h2>
   <button onclick="startGame('memory')">Memory</button>
@@ -47,19 +44,16 @@
   <button onclick="startGame('normal')">Wörter lernen</button>
 </div>
 
-<!-- Spielbereich -->
 <div id="gameScreen" class="screen">
   <h2 id="methodTitle"></h2>
   <div id="gameBoard"></div>
 </div>
 
-<!-- Rangliste -->
 <div id="leaderboardScreen" class="screen">
   <h2>Top 10 Spieler</h2>
   <ol id="leaderboardList"></ol>
 </div>
 
-<!-- Profil -->
 <div id="profileScreen" class="screen">
   <h2>Profil</h2>
   <p>Benutzername: <span id="profileUsername"></span></p>
