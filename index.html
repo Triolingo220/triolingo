@@ -3,7 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <title>Triolingo 2.0</title>
-<link rel="stylesheet" href="style.css">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+header {
+  padding: 15px 20px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+header h1 { margin: 0; font-size: 24px; }
+nav button { margin-left: 10px; }
+
+button {
+  padding: 8px 16px;
+  margin: 5px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  color: white;
+  transition: 0.3s;
+}
+
+button:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+
+input { padding: 8px; border-radius: 8px; border: none; margin: 5px; }
+
+#gameBoard {
+  display: grid;
+  grid-template-columns: repeat(4, 120px);
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.card, .flashcard {
+  width: 100px;
+  height: 100px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.3s;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.correct { background: rgba(46,204,113,0.8) !important; box-shadow: 0 0 15px rgba(46,204,113,0.8) !important;}
+.wrong { background: rgba(231,76,60,0.8) !important; box-shadow: 0 0 15px rgba(231,76,60,0.8) !important; }
+
+.pass-container { position: relative; display:inline-block; }
+.pass-container input { padding-right:30px; }
+.pass-container .toggle-pass {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.screen { display:none; margin-top:30px; text-align:center; }
+#pointsRank { margin:5px; font-weight:bold; }
+</style>
 </head>
 <body>
 
@@ -11,14 +91,15 @@
   <h1>🌍 Triolingo 2.0</h1>
   <nav id="navBar" style="display:none;">
     <button onclick="showLanguageScreen()">Sprache</button>
+    <button onclick="showMethodScreen()">Lernmethode</button>
     <button onclick="showLeaderboard()">Rangliste</button>
     <button onclick="showProfile()">Profil</button>
     <button onclick="logoutUser()">Abmelden</button>
   </nav>
 </header>
-
 <div id="pointsRank" style="display:none;">Punkte: 0 | Rang: Anfänger</div>
 
+<!-- Login / Registrierung -->
 <div id="loginScreen" class="screen">
   <h2>Anmelden oder Registrieren</h2>
   <input type="text" id="loginUsername" placeholder="Benutzername"><br>
@@ -30,6 +111,7 @@
   <button onclick="registerUser()">Registrieren</button>
 </div>
 
+<!-- Sprache wählen -->
 <div id="languageScreen" class="screen">
   <h2>Wähle eine Sprache</h2>
   <button onclick="selectLanguage('englisch')">Englisch</button>
@@ -37,6 +119,7 @@
   <button onclick="selectLanguage('kurdisch')">Kurdisch</button>
 </div>
 
+<!-- Lernmethode -->
 <div id="methodScreen" class="screen">
   <h2>Wähle Lernmethode</h2>
   <button onclick="startGame('memory')">Memory</button>
@@ -44,16 +127,19 @@
   <button onclick="startGame('normal')">Wörter lernen</button>
 </div>
 
+<!-- Spielbereich -->
 <div id="gameScreen" class="screen">
   <h2 id="methodTitle"></h2>
   <div id="gameBoard"></div>
 </div>
 
+<!-- Rangliste -->
 <div id="leaderboardScreen" class="screen">
   <h2>Top 10 Spieler</h2>
   <ol id="leaderboardList"></ol>
 </div>
 
+<!-- Profil -->
 <div id="profileScreen" class="screen">
   <h2>Profil</h2>
   <p>Benutzername: <span id="profileUsername"></span></p>
@@ -64,7 +150,192 @@
   <p id="profilePointsRank"></p>
 </div>
 
-<script src="words.js"></script>
-<script src="script.js"></script>
+<script>
+// --- Benutzerverwaltung ---
+let currentUser=null, language='', method='', points=0;
+function getUsers(){ return JSON.parse(localStorage.getItem('triolingoUsers')||'{}'); }
+function saveUsers(u){ localStorage.setItem('triolingoUsers', JSON.stringify(u)); }
+
+function registerUser(){
+  const u=document.getElementById('loginUsername').value.trim();
+  const p=document.getElementById('loginPassword').value;
+  if(!u||!p){ alert('Bitte Benutzername & Passwort eingeben'); return; }
+  let users=getUsers();
+  if(users[u]){ alert('Benutzername existiert schon'); return; }
+  users[u]={password:p,points:0};
+  saveUsers(users);
+  alert('Registrierung erfolgreich! Bitte anmelden.');
+}
+
+function loginUser(){
+  const u=document.getElementById('loginUsername').value.trim();
+  const p=document.getElementById('loginPassword').value;
+  let users=getUsers();
+  if(users[u] && users[u].password===p){ currentUser=u; points=users[u].points; showMainUI(); }
+  else alert('Benutzername oder Passwort falsch');
+}
+
+function logoutUser(){
+  currentUser=null; points=0;
+  document.getElementById('navBar').style.display='none';
+  document.getElementById('pointsRank').style.display='none';
+  showScreen('loginScreen');
+}
+
+function togglePassword(id){
+  const input=document.getElementById(id);
+  input.type=input.type==='password'?'text':'password';
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.style.display='none');
+  document.getElementById(id).style.display='block';
+}
+
+function showMainUI(){
+  document.getElementById('navBar').style.display='flex';
+  document.getElementById('pointsRank').style.display='block';
+  updatePointsAndRank();
+  showScreen('languageScreen');
+}
+
+function showLanguageScreen(){ showScreen('languageScreen'); }
+function showMethodScreen(){ showScreen('methodScreen'); }
+
+// --- Profil ---
+function showProfile(){
+  if(!currentUser) return;
+  showScreen('profileScreen');
+  document.getElementById('profileUsername').innerText=currentUser;
+  const users=getUsers();
+  document.getElementById('profilePassword').value=users[currentUser].password;
+  document.getElementById('profilePointsRank').innerText=`Punkte: ${points} | Rang: ${getRank(points)}`;
+}
+
+function getRank(p){
+  if(p>=500) return 'Meister';
+  if(p>=250) return 'Experte';
+  if(p>=100) return 'Fortgeschritten';
+  return 'Anfänger';
+}
+
+function updatePointsAndRank(){
+  document.getElementById('pointsRank').innerText=`Punkte: ${points} | Rang: ${getRank(points)}`;
+  if(currentUser){
+    let users=getUsers();
+    users[currentUser].points=points;
+    saveUsers(users);
+  }
+}
+
+// --- Sprache & Methode ---
+function selectLanguage(lang){ language=lang; showMethodScreen(); }
+function startGame(m){
+  method=m;
+  showScreen('gameScreen');
+  document.getElementById('methodTitle').innerText = method==='memory'?'Memory-Spiel':method==='flashcards'?'Karteikarten':'Wörter lernen';
+  if(method==='memory') setupMemory();
+  else if(method==='flashcards') setupFlashcards();
+  else setupNormalLearning();
+}
+
+// --- Beispielwörter ---
+const words = {
+  englisch:[["the","der/die/das"],["be","sein"],["apple","Apfel"],["dog","Hund"],["cat","Katze"]],
+  russisch:[["я","ich"],["ты","du"],["кот","Katze"],["дом","Haus"],["собака","Hund"]],
+  kurdisch:[["ez","ich"],["tu","du"],["mal","Haus"],["sêv","Apfel"],["kûçik","Hund"]]
+};
+
+// --- Memory ---
+let firstCard=null, secondCard=null, lockBoard=false;
+function setupMemory(){
+  const board=document.getElementById('gameBoard');
+  board.innerHTML='';
+  let selected=[...words[language]].sort(()=>0.5-Math.random()).slice(0,3); // nur 3 Paare als Beispiel
+  let cards=[];
+  selected.forEach(pair=>{ cards.push(pair[0]); cards.push(pair[1]); });
+  cards.sort(()=>0.5-Math.random());
+  cards.forEach(w=>{
+    const card=document.createElement('button');
+    card.classList.add('card');
+    card.dataset.word=w;
+    card.innerText='?';
+    card.onclick=flipCard;
+    board.appendChild(card);
+  });
+}
+
+function flipCard(){
+  if(lockBoard || this===firstCard) return;
+  this.innerText=this.dataset.word;
+  if(!firstCard){ firstCard=this; return; }
+  secondCard=this;
+  checkMatch();
+}
+
+function checkMatch(){
+  let isMatch=false;
+  words[language].forEach(p=>{
+    if((p[0]===firstCard.dataset.word && p[1]===secondCard.dataset.word) || (p[1]===firstCard.dataset.word && p[0]===secondCard.dataset.word))
+      isMatch=true;
+  });
+  if(isMatch){
+    firstCard.classList.add('correct'); secondCard.classList.add('correct');
+    points+=10; updatePointsAndRank();
+    resetCards();
+  } else{
+    firstCard.classList.add('wrong'); secondCard.classList.add('wrong');
+    lockBoard=true;
+    setTimeout(()=>{
+      firstCard.innerText='?'; firstCard.classList.remove('wrong');
+      secondCard.innerText='?'; secondCard.classList.remove('wrong');
+      resetCards();
+    },800);
+  }
+}
+
+function resetCards(){ [firstCard,secondCard]=[null,null]; lockBoard=false; }
+
+// --- Flashcards ---
+function setupFlashcards(){
+  const board=document.getElementById('gameBoard');
+  board.innerHTML='';
+  const pair=words[language][Math.floor(Math.random()*words[language].length)];
+  const card=document.createElement('button');
+  card.classList.add('flashcard');
+  card.innerText=pair[0];
+  card.onclick=()=>{ card.innerText=pair[1]; points+=5; updatePointsAndRank(); };
+  board.appendChild(card);
+}
+
+// --- Normal Learning ---
+function setupNormalLearning(){
+  const board=document.getElementById('gameBoard');
+  board.innerHTML='';
+  const pair=words[language][Math.floor(Math.random()*words[language].length)];
+  const wordDiv=document.createElement('div');
+  wordDiv.innerText=pair[0]; wordDiv.style.fontSize='24px'; board.appendChild(wordDiv);
+  let options=[pair[1]];
+  while(options.length<4){
+    let rand=words[language][Math.floor(Math.random()*words[language].length)][1];
+    if(!options.includes(rand)) options.push(rand);
+  }
+  options.sort(()=>0.5-Math.random());
+  options.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.innerText=opt;
+    btn.onclick=()=>{
+      if(opt===pair[1]){ btn.classList.add('correct'); points+=5; }
+      else btn.classList.add('wrong');
+      updatePointsAndRank();
+      setTimeout(setupNormalLearning,500);
+    };
+    board.appendChild(btn);
+  });
+}
+
+// --- Start ---
+showScreen('loginScreen');
+</script>
 </body>
 </html>
