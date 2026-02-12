@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Triolingo 4.0</title>
+<title>Triolingo 4.5</title>
 
 <style>
 body{
@@ -22,8 +22,6 @@ header{
   align-items:center;
 }
 
-h1{margin:0;}
-
 button{
   font-size:20px;
   padding:18px 35px;
@@ -39,7 +37,6 @@ button{
 button:hover{background:rgba(255,255,255,0.3);}
 
 .screen{display:none;margin-top:40px;}
-
 .correct{background:green !important;}
 .wrong{background:red !important;}
 
@@ -50,29 +47,14 @@ button:hover{background:rgba(255,255,255,0.3);}
   justify-content:center;
   margin-top:30px;
 }
-
-.progressBar{
-  width:60%;
-  margin:15px auto;
-  height:25px;
-  background:rgba(255,255,255,0.2);
-  border-radius:20px;
-}
-
-.progress{
-  height:100%;
-  background:limegreen;
-  border-radius:20px;
-  width:0%;
-}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🌍 Triolingo 4.0</h1>
-<div>
+<h1>🌍 Triolingo 4.5</h1>
+<div id="navBar" style="display:none;">
 <button onclick="showLanguage()">Sprache</button>
 <button onclick="showMethods()">Methoden</button>
 <button onclick="showProfile()">Profil</button>
@@ -81,17 +63,19 @@ button:hover{background:rgba(255,255,255,0.3);}
 </div>
 </header>
 
-<div id="xpDisplay"></div>
-<div class="progressBar"><div class="progress" id="xpBar"></div></div>
+<div id="pointsDisplay"></div>
 
 <!-- LOGIN -->
 <div id="loginScreen" class="screen">
 <h2>Login / Registrierung</h2>
 <input id="username" placeholder="Benutzername"><br><br>
 <input type="password" id="password" placeholder="Passwort"><br><br>
-<button onclick="login()">Anmelden</button>
 <button onclick="register()">Registrieren</button>
+<button onclick="login()">Anmelden</button>
 </div>
+
+<!-- PROFILE -->
+<div id="profileScreen" class="screen"></div>
 
 <!-- LANGUAGE -->
 <div id="languageScreen" class="screen">
@@ -123,253 +107,8 @@ button:hover{background:rgba(255,255,255,0.3);}
 <ol id="leaderboardList"></ol>
 </div>
 
-<script>
+<script src="words.js"></script>
+<script src="script.js"></script>
 
-/* ---------- SOUND ---------- */
-const correctSound=new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
-const wrongSound=new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
-
-/* ---------- USER SYSTEM ---------- */
-let currentUser=null;
-let language="";
-let xp=0;
-let level=1;
-let wrongWords=[];
-let memoryUnlocked=1;
-let currentWord=null;
-
-function getUsers(){return JSON.parse(localStorage.getItem("users")||"{}");}
-function saveUsers(u){localStorage.setItem("users",JSON.stringify(u));}
-
-function register(){
-let u=username.value.trim();
-let p=password.value;
-let users=getUsers();
-if(users[u]){alert("Benutzer existiert");return;}
-users[u]={password:p,xp:0,level:1,wrong:[],memory:1};
-saveUsers(users);
-alert("Registriert!");
-}
-
-function login(){
-let u=username.value.trim();
-let p=password.value;
-let users=getUsers();
-if(users[u] && users[u].password===p){
-currentUser=u;
-xp=users[u].xp;
-level=users[u].level;
-wrongWords=users[u].wrong||[];
-memoryUnlocked=users[u].memory||1;
-updateXP();
-show("languageScreen");
-}else alert("Login falsch");
-}
-
-function logout(){
-currentUser=null;
-show("loginScreen");
-}
-
-/* ---------- WORDS 200 ---------- */
-function generateWords(prefix){
-let arr=[];
-for(let i=1;i<=200;i++){
-arr.push([prefix+"_"+i,"Deutsch_"+i]);
-}
-return arr;
-}
-const words={
-englisch:generateWords("EN"),
-russisch:generateWords("RU"),
-kurdisch:generateWords("KU")
-};
-
-/* ---------- XP SYSTEM ---------- */
-function xpNeeded(){return level*100;}
-
-function addXP(amount){
-xp+=amount;
-if(xp>=xpNeeded()){
-xp-=xpNeeded();
-level++;
-alert("Level Up! Jetzt Level "+level);
-}
-updateXP();
-}
-
-function updateXP(){
-xpDisplay.innerText="Level "+level+" | XP: "+xp+"/"+xpNeeded();
-xpBar.style.width=(xp/xpNeeded()*100)+"%";
-let users=getUsers();
-if(currentUser){
-users[currentUser].xp=xp;
-users[currentUser].level=level;
-users[currentUser].wrong=wrongWords;
-users[currentUser].memory=memoryUnlocked;
-saveUsers(users);
-}
-}
-
-/* ---------- UI ---------- */
-function show(id){
-document.querySelectorAll(".screen").forEach(s=>s.style.display="none");
-document.getElementById(id).style.display="block";
-}
-
-function showLanguage(){show("languageScreen");}
-function showMethods(){show("methodScreen");}
-function selectLanguage(l){language=l;showMethods();}
-
-/* ---------- NORMAL LEARNING ---------- */
-function startNormal(){
-show("gameScreen");
-gameTitle.innerText="Wörter lernen";
-nextBtn.style.display="none";
-loadWord(words[language]);
-}
-
-function loadWord(arr){
-gameBoard.innerHTML="";
-currentWord=arr[Math.floor(Math.random()*arr.length)];
-
-let q=document.createElement("h2");
-q.innerText=currentWord[0];
-gameBoard.appendChild(q);
-
-let options=[currentWord[1]];
-while(options.length<4){
-let r=arr[Math.floor(Math.random()*arr.length)][1];
-if(!options.includes(r))options.push(r);
-}
-options.sort(()=>0.5-Math.random());
-
-options.forEach(opt=>{
-let btn=document.createElement("button");
-btn.innerText=opt;
-btn.onclick=function(){
-if(opt===currentWord[1]){
-btn.classList.add("correct");
-correctSound.play();
-addXP(20);
-}else{
-btn.classList.add("wrong");
-wrongSound.play();
-alert("Richtig: "+currentWord[1]);
-if(!wrongWords.includes(currentWord))wrongWords.push(currentWord);
-}
-nextBtn.style.display="inline-block";
-};
-gameBoard.appendChild(btn);
-});
-}
-
-function nextWord(){
-nextBtn.style.display="none";
-loadWord(words[language]);
-}
-
-function startWrong(){
-if(wrongWords.length===0){alert("Keine falschen Wörter");return;}
-show("gameScreen");
-gameTitle.innerText="Falsche Wörter";
-nextBtn.style.display="none";
-loadWord(wrongWords);
-}
-
-/* ---------- MEMORY ---------- */
-function memoryMenu(){
-show("gameScreen");
-gameTitle.innerText="Memory Level wählen";
-gameBoard.innerHTML="";
-for(let i=1;i<=10;i++){
-let btn=document.createElement("button");
-btn.innerText="Level "+i;
-if(i>memoryUnlocked)btn.disabled=true;
-btn.onclick=function(){startMemory(i);};
-gameBoard.appendChild(btn);
-}
-}
-
-let first=null,second=null,lock=false,found=0,total=0;
-
-function startMemory(lvl){
-show("gameScreen");
-gameTitle.innerText="Memory Level "+lvl;
-gameBoard.innerHTML="";
-found=0;
-let pairs=words[language].slice((lvl-1)*5,lvl*5);
-total=pairs.length;
-
-let cards=[];
-pairs.forEach(p=>{cards.push(p[0]);cards.push(p[1]);});
-cards.sort(()=>0.5-Math.random());
-
-cards.forEach(word=>{
-let btn=document.createElement("button");
-btn.innerText="?";
-btn.dataset.word=word;
-btn.onclick=function(){
-if(lock||btn.classList.contains("correct"))return;
-btn.innerText=word;
-if(!first){first=btn;return;}
-second=btn;
-checkMemory(lvl);
-};
-gameBoard.appendChild(btn);
-});
-}
-
-function checkMemory(lvl){
-lock=true;
-let match=false;
-words[language].forEach(p=>{
-if((p[0]===first.dataset.word && p[1]===second.dataset.word)||
-(p[1]===first.dataset.word && p[0]===second.dataset.word))
-match=true;
-});
-if(match){
-first.classList.add("correct");
-second.classList.add("correct");
-found++;
-if(found===total){
-addXP(50);
-alert("Level geschafft!");
-if(lvl===memoryUnlocked)memoryUnlocked++;
-memoryMenu();
-}
-resetMemory();
-}else{
-setTimeout(()=>{
-first.innerText="?";
-second.innerText="?";
-resetMemory();
-},800);
-}
-}
-
-function resetMemory(){first=null;second=null;lock=false;}
-
-/* ---------- LEADERBOARD ---------- */
-function showLeaderboard(){
-show("leaderboardScreen");
-let users=getUsers();
-let arr=Object.keys(users).map(u=>({name:u,xp:users[u].level*100+users[u].xp}));
-arr.sort((a,b)=>b.xp-a.xp);
-leaderboardList.innerHTML="";
-arr.slice(0,10).forEach((p,i)=>{
-let li=document.createElement("li");
-if(i===0)li.innerHTML="🥇 "+p.name+" - "+p.xp;
-else if(i===1)li.innerHTML="🥈 "+p.name+" - "+p.xp;
-else if(i===2)li.innerHTML="🥉 "+p.name+" - "+p.xp;
-else li.innerText=p.name+" - "+p.xp;
-leaderboardList.appendChild(li);
-});
-}
-
-/* ---------- START ---------- */
-show("loginScreen");
-
-</script>
 </body>
 </html>
