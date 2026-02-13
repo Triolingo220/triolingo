@@ -309,36 +309,65 @@ loadWord(words[language]);
 }
 
 function loadWord(arr){
+
+if(!arr || arr.length===0){
+alert("Keine Wörter verfügbar.");
+showMethods();
+return;
+}
+
 gameBoard.innerHTML="";
 currentWord=arr[Math.floor(Math.random()*arr.length)];
+
 let q=document.createElement("h2");
 q.innerText=currentWord[0];
 gameBoard.appendChild(q);
+
 let options=[currentWord[1]];
+
 while(options.length<4){
 let r=arr[Math.floor(Math.random()*arr.length)][1];
 if(!options.includes(r)) options.push(r);
 }
+
 options.sort(()=>0.5-Math.random());
+
 options.forEach(opt=>{
 let btn=document.createElement("button");
 btn.innerText=opt;
+
 btn.onclick=function(){
+
 if(opt===currentWord[1]){
+
 btn.classList.add("correct");
 correctSound.play();
 addXP(20);
+
+// ✅ Richtig → aus falschen entfernen
+wrongWords = wrongWords.filter(w => w[0] !== currentWord[0]);
+
 }else{
+
 btn.classList.add("wrong");
 wrongSound.play();
 alert("Richtig: "+currentWord[1]);
-if(!wrongWords.includes(currentWord)) wrongWords.push(currentWord);
+
+// ✅ Falsch → sauber hinzufügen
+if(!wrongWords.some(w => w[0] === currentWord[0])){
+wrongWords.push([...currentWord]);
 }
+
+}
+
 nextBtn.style.display="inline-block";
 };
+
 gameBoard.appendChild(btn);
 });
+
 }
+
 
 function nextWord(){nextBtn.style.display="none"; loadWord(words[language]);}
 
